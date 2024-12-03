@@ -4,7 +4,8 @@ Plugin Name:  Simple Post Redirect
 Plugin URI: http://wordpress.org/plugins/simple-post-redirect/
 Description: This plugin allows you to make simple redirects of single pages of any custom post type to any url.
 Author: Mohit Agarwal
-Version: 1.7.1
+Author URI: https://simpleproplugins.com/product/simple-page-redirect/
+Version: 1.7.2
 Text Domain: simple-post-redirect
 Stable tag: "trunk"
 License: GPLv2 or later
@@ -98,7 +99,6 @@ function me_spr_redirect_metabox_save($post_id)
 }
 add_action('save_post', 'me_spr_redirect_metabox_save');
 
-add_filter('template_redirect', 'me_spr_permalink_redirect');
 function me_spr_permalink_redirect($permalink)
 {
 
@@ -115,3 +115,21 @@ function me_spr_permalink_redirect($permalink)
     }
     return;
 }
+add_filter('template_redirect', 'me_spr_permalink_redirect');
+
+function me_spr_enqueue_block_assets() {
+    wp_enqueue_style('me-spr-block-styles', plugin_dir_url(__FILE__) . '/css/block-styles.min.css');
+}
+add_action('enqueue_block_assets', 'me_spr_enqueue_block_assets');
+
+// Add "Premium Support" link to the plugin row on the plugins page
+function me_spr_add_premium_support_link($links, $file) {
+    // Check if this is our plugin
+    if (strpos($file, 'simple-post-redirect.php') !== false) {
+        // Add the "Premium Support" link
+        $links[] = '<a style="color:red;" href="https://simpleproplugins.com/contact-us/" target="_blank">Premium Support</a>';
+    }
+    return $links;
+}
+
+add_filter('plugin_row_meta', 'me_spr_add_premium_support_link', 10, 2);
