@@ -5,7 +5,7 @@ Plugin URI: http://wordpress.org/plugins/simple-post-redirect/
 Description: This plugin allows you to make simple redirects of single pages of any custom post type to any url.
 Author: Mohit Agarwal
 Author URI: https://simpleproplugins.com/product/simple-page-redirect/
-Version: 1.7.3
+Version: 1.7.4
 Text Domain: simple-post-redirect
 Stable tag: "trunk"
 License: GPLv2 or later
@@ -29,7 +29,7 @@ along with Simple Post Redirect. If not, see http://www.gnu.org/licenses/gpl-2.0
 
 /**
  * @package Simple Post Redirect
- * @version 1.7.3
+ * @version 1.7.4
  */
 
 function me_spr_redirect_add_meta_boxes()
@@ -60,12 +60,22 @@ add_action('add_meta_boxes', 'me_spr_redirect_add_meta_boxes');
 
 function me_spr_redirect_callback_function($args)
 {
+    $saved_url = get_post_meta(get_the_ID(), 'me_spr_post_redirect', true);
 
-    $saved_url = get_post_meta(get_the_ID() , 'me_spr_post_redirect', true);
-    $html = '<input style="width:100%;margin-top:5px;" placeholder="' . __('Type a URL here.', 'simple-post-redirect') . '" type="text" name="me_spr_post_redirect" value="' . $saved_url . '">';
-    echo $html;
+    echo '<input style="width:100%;margin-top:5px;" placeholder="' .
+        __('Type a URL here.', 'simple-post-redirect') .
+        '" type="text" name="me_spr_post_redirect" value="' . esc_attr($saved_url) . '">';
+
+    echo '<p style="font-size:12px;color:#666;margin-top:6px;">
+        Need bulk redirects, labels, or expiration dates?
+        <a href="https://simpleproplugins.com/product/simple-page-redirect/" target="_blank">
+            Upgrade to Pro
+        </a>
+    </p>';
+
     wp_nonce_field('me_spr_redirect_nonce_action', 'me_spr_redirect_nonce');
 }
+
 
 function me_spr_redirect_load_plugin_textdomain()
 {
@@ -99,26 +109,27 @@ function me_spr_redirect_metabox_save($post_id)
 }
 add_action('save_post', 'me_spr_redirect_metabox_save');
 
-function me_spr_permalink_redirect($permalink)
-{
-
-    if (!is_singular())
-    {
-        return true;
+function me_spr_permalink_redirect() {
+    if (!is_singular()) {
+        return;
     }
-    global $post;
-    $url = get_post_meta($post->ID, 'me_spr_post_redirect', true);
-    if (!empty($url))
-    {
+
+    $post_id = get_queried_object_id();
+    if (!$post_id) {
+        return;
+    }
+
+    $url = get_post_meta($post_id, 'me_spr_post_redirect', true);
+    if (!empty($url)) {
         wp_redirect($url, 301);
         exit;
     }
-    return;
 }
-add_filter('template_redirect', 'me_spr_permalink_redirect');
+
+add_action('template_redirect', 'me_spr_permalink_redirect');
 
 function me_spr_enqueue_block_assets() {
-    wp_enqueue_style('me-spr-block-styles', plugin_dir_url(__FILE__) . '/css/block-styles.min.css');
+    wp_enqueue_style('me-spr-block-styles', plugin_dir_url(__FILE__) . 'css/block-styles.min.css');
 }
 add_action('enqueue_block_assets', 'me_spr_enqueue_block_assets');
 
@@ -127,7 +138,8 @@ function me_spr_add_premium_support_link($links, $file) {
     // Check if this is our plugin
     if (strpos($file, 'simple-post-redirect.php') !== false) {
         // Add the "Premium Support" link
-        $links[] = '<a style="color:red;" href="https://simpleproplugins.com/contact-us/" target="_blank">Premium Support</a>';
+		$links[] = '<a style="color:#d63638;font-weight:600;" href="https://simpleproplugins.com/product/simple-page-redirect/" target="_blank">Upgrade to Pro</a>';
+
     }
     return $links;
 }
