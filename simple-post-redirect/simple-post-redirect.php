@@ -5,7 +5,7 @@ Plugin URI: http://wordpress.org/plugins/simple-post-redirect/
 Description: This plugin allows you to make simple redirects of single pages of any custom post type to any url.
 Author: Mohit Agarwal
 Author URI: https://simpleproplugins.com/product/simple-page-redirect/
-Version: 1.7.4
+Version: 1.8
 Text Domain: simple-post-redirect
 Stable tag: "trunk"
 License: GPLv2 or later
@@ -29,7 +29,7 @@ along with Simple Post Redirect. If not, see http://www.gnu.org/licenses/gpl-2.0
 
 /**
  * @package Simple Post Redirect
- * @version 1.7.4
+ * @version 1.8
  */
 
 function me_spr_redirect_add_meta_boxes()

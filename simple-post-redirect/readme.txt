@@ -2,9 +2,9 @@
 Contributors: imemine
 Tags: redirect, url, 301, woocommerce, seo
 Requires at least: 3.0
-Tested up to: 6.9
+Tested up to: 7.0
 Requires PHP: 5.0
-Stable tag: 1.7.4
+Stable tag: 1.8
 License: GPLv2 or later
 
 == Short Description ==
